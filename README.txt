@@ -1,7 +1,7 @@
 # P1 : Simple Shell Interpreter
 
 ### Overview
-This program is to mimic a Simple Shell Interpreter for CSC 360 Programming Assignment 1
+This program is to mimic a Simple Shell Interpreter for a Unix environment
 
 ### Features
 The program is capable of the following feature:
@@ -23,10 +23,10 @@ The program is capable of the following feature:
 - Project is done entirely in C, additional help with MAKEFILE
 
 ### Installation
-1. **Prerequisites**: Install a C compiler such as gcc
+1. **Prerequisites**: Install a C compiler, such as gcc
 2. **Clone the repository**:
     ```
-    git clone https://gitlab.csc.uvic.ca/courses/2024091/CSC360_COSI/assignments/lukekuligowicz/p1.git
+    git clone https://github.com/LukeIsLak/shell-interpreter
     ```
 
 ### Usage

@@ -13,7 +13,7 @@ int kill(pid_t pid, int siq);
  * @param argc number of arguements
  */
 int handleBackground(char* argv[], int argc) {
-    //remove the first arguement (remove bg from our arguements)
+    /*remove the first arguement (remove bg from our arguements)*/
     shiftTokenizedString(argv, argc);
     char command[ARGV_BUFFER_SIZE];
     unTokenizeString(command, argv, argc-1);
@@ -33,12 +33,8 @@ int handleBackground(char* argv[], int argc) {
     /*If process number is > 0, we are the parent process*/
     if (process_num > 0) {
         id_linked_node* new_child = create_id_node(command, process_num);
-        if (bg_root == NULL) {
-            bg_root = new_child;
-        }
-        else {
-            append_node(bg_root, new_child);
-        }
+        if (bg_root == NULL) bg_root = new_child;
+        else append_node(bg_root, new_child);
         bg_list_size ++;
     }
     return 0;
@@ -52,7 +48,7 @@ void updateBackground() {
     if (bg_list_size > 0) {
         pid_t ter = waitpid(0, NULL, 1);
         while (ter > 0) {
-            //If the finished process is referenced in the root node
+            /*If the finished process is referenced in the root node*/
             if (bg_root->id == ter) {
                 id_linked_node* temp = bg_root;
                 printf("%d: %s has terminated.\n", ter, temp->data);
@@ -61,7 +57,7 @@ void updateBackground() {
                 free(temp);
                 bg_list_size--;
             }
-            //If the finished process is not referenced in the root node
+            /*If the finished process is not referenced in the root node*/
             else {
                 id_linked_node* curr = bg_root;
                 while(curr->next != NULL && curr->next->id != ter) {
@@ -94,11 +90,9 @@ void printBackgroundProcesses() {
         return;
     }
     id_linked_node* curr = bg_root;
-    int count = 1;
-    while (curr != NULL) {
+    int count;
+    for (count = 1; curr != NULL; count++, curr = curr->next;) {
         printf("%d: %s %d\n", curr->id, curr->data, count);
-        curr = curr->next;
-        count++;
     }
     printf("Total Background Jobs: %d\n", count-1);
 }
@@ -117,12 +111,8 @@ void killBackgroundProcess(int pid) {
             kill(pid, SIGKILL);
             break;
         }
-        else {
-            curr = curr->next;
-        }
+        else curr = curr->next;
     }
     /*If did not find, print error*/
-    if (curr == NULL) {
-        printf("ERROR: No background proccess running with an ID of: %d\n", pid);
-    }
+    if (curr == NULL) printf("ERROR: No background proccess running with an ID of: %d\n", pid);
 }

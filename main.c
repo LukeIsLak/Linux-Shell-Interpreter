@@ -99,47 +99,28 @@ int main() {
             if(strcmp(argv[0], "cd") == 0) {
                 handleChangeInDirectory(argv, cwd);
                 updatePrompt(prompt, username, hostname, cwd);
-                updateBackground();
-                free(input);
-                continue;
             }
             /*If the input is bg - handle background processes*/
-            else if(strcmp(argv[0], "bg") == 0) {
-                handleBackground(argv, argc);
-                updateBackground();
-                free(input);
-                continue;
-            }
+            else if(strcmp(argv[0], "bg") == 0) handleBackground(argv, argc);
             /*If the input is bglist - handle print background*/
-            else if (strcmp(argv[0], "bglist") == 0) {
-                printBackgroundProcesses(bg_root);
-                updateBackground();
-                free(input);
-                continue;
-            }
+            else if (strcmp(argv[0], "bglist") == 0) printBackgroundProcesses(bg_root);
             /*If the input is bgkill - handle killing child process*/
             else if (strcmp(argv[0], "bgkill") == 0) {
-                if (argc > 1) {
+                if (argc > 1) { /*If invalid input (not an int)*/
                     int pid = atoi(argv[1]);
-                    /*If invalid input (not an int)*/
-                    if (pid == 0) {
-                        printf("ERROR: Expected integer value for bgkill\n");
-
-                    }
+                    if (pid == 0) printf("ERROR: Expected integer value for bgkill\n");
                     else {
                         killBackgroundProcess(pid);
                         sleep(1);
                     }
-
                 }
-                /*If no input*/
-                else {
+                else { /*If no input*/
                     printf("ERROR: Cannot execute: %s, expecting process ID\n", argv[0]);
                 }
-                    updateBackground();
-                    free(input);
-                    continue;
             }
+            updateBackground();
+            free(input);
+            continue;
         }
 
 
@@ -156,10 +137,7 @@ int main() {
         }
 
         /*If we are in the parent process*/
-        if (p > 0) {
-            waitpid(p, NULL, 0);
-        }
-
+        if (p > 0) { waitpid(p, NULL, 0);
         free(input);
         updateBackground();
     }
@@ -178,10 +156,7 @@ void handleChangeInDirectory(char* argv[], char* cwdAddr) {
     }
     else if (argv[1] == NULL || argv[1][0] == '~') {
         chdir(getenv("HOME"));
-        if (strlen(argv[1]+2) == 0) {
-            return;
-        }
-        if(chdir(argv[1]+2)==-1) {
+        if(strlen(argv[1]+2) != 0 && chdir(argv[1]+2)==-1) {
             printf("<%s> No such directory\n", argv[1]+2);
             return;
         }
